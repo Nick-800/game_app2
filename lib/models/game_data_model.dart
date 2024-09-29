@@ -24,7 +24,7 @@ class GameDetailsModel {
   String developer;
   DateTime releaseDate;
   String freetogameProfileUrl;
-  MinimumSystemRequirements minimumSystemRequirements;
+  MinimumSystemRequirements? minimumSystemRequirements;
   List<Screenshot> screenshots;
 
   GameDetailsModel({
@@ -60,8 +60,10 @@ class GameDetailsModel {
         developer: json["developer"],
         releaseDate: DateTime.parse(json["release_date"]),
         freetogameProfileUrl: json["freetogame_profile_url"],
-        minimumSystemRequirements: MinimumSystemRequirements.fromJson(
-            json["minimum_system_requirements"]),
+        minimumSystemRequirements: json.containsKey("minimum_system_requirements")
+        ?MinimumSystemRequirements.fromJson(
+            json["minimum_system_requirements"])
+            :null,
         screenshots: List<Screenshot>.from(
             json["screenshots"].map((x) => Screenshot.fromJson(x))),
       );
@@ -81,7 +83,7 @@ class GameDetailsModel {
         "release_date":
             "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
         "freetogame_profile_url": freetogameProfileUrl,
-        "minimum_system_requirements": minimumSystemRequirements.toJson(),
+        "minimum_system_requirements": minimumSystemRequirements?.toJson(),
         "screenshots": List<dynamic>.from(screenshots.map((x) => x.toJson())),
       };
 }

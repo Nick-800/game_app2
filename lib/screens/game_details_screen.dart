@@ -2,13 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:game_app/models/game_data_model.dart';
-import 'package:game_app/models/game_model.dart';
 import 'package:http/http.dart' as http;
 
 class GameDetailsScreen extends StatefulWidget {
-  final GameModel gameModel;
+  final String gameID;
 
-  const GameDetailsScreen({super.key, required this.gameModel});
+  const GameDetailsScreen({super.key, required this.gameID});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -25,12 +24,13 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   }
 
   Future<void> _fetchGameDetails() async {
-    final response = await http.get(Uri.parse(
-        'https://www.freetogame.com/api/game?id=${widget.gameModel.id}'));
-    final _gameDetailsModel =
+    final response = await http.get(
+        Uri.parse('https://www.freetogame.com/api/game?id=${widget.gameID}'));
+    // ignore: non_constant_identifier_names
+    final game_DetailsModel =
         GameDetailsModel.fromJson(jsonDecode(response.body));
     setState(() {
-      gameDetailsModel = _gameDetailsModel;
+      gameDetailsModel = game_DetailsModel;
     });
   }
 
@@ -41,7 +41,6 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
         child: CircularProgressIndicator(),
       );
     }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(gameDetailsModel!.title),
@@ -51,7 +50,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Display game title and thumbnail
+ 
               GameTitleAndThumbnail(
                 title: gameDetailsModel!.title,
                 thumbnail: gameDetailsModel!.thumbnail,
@@ -76,15 +75,15 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                 releaseDate: gameDetailsModel!.releaseDate,
               ),
               const SizedBox(height: 16),
-
-              // Display minimum system requirements
-              MinimumSystemRequirementsWidget(
-                minimumSystemRequirements:
-                    gameDetailsModel!.minimumSystemRequirements,
-              ),
-              const SizedBox(height: 16),
-
-              // Display screenshots
+              gameDetailsModel!.platform != "Browser"
+                  // Display minimum system requirements
+                  ? MinimumSystemRequirementsWidget(
+                      minimumSystemRequirements:
+                          gameDetailsModel?.minimumSystemRequirements,
+                      gameDetails: gameDetailsModel!,
+                    )
+                  : const SizedBox(height: 16),
+              const SizedBox(height: 16),  
               ScreenshotsWidget(
                 screenshots: gameDetailsModel!.screenshots,
               ),
@@ -96,7 +95,6 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   }
 }
 
-// Game title and thumbnail widget
 class GameTitleAndThumbnail extends StatelessWidget {
   final String title;
   final String thumbnail;
@@ -106,9 +104,9 @@ class GameTitleAndThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Image.network(thumbnail),
+        Image.network(thumbnail, scale: 1.1),
         const SizedBox(width: 16),
         Text(title, style: const TextStyle(fontSize: 24)),
       ],
@@ -116,7 +114,7 @@ class GameTitleAndThumbnail extends StatelessWidget {
   }
 }
 
-// Game status and short description widget
+
 class GameStatusAndDescription extends StatelessWidget {
   final String status;
   final String shortDescription;
@@ -136,7 +134,7 @@ class GameStatusAndDescription extends StatelessWidget {
   }
 }
 
-// Game details widget
+
 class GameDetails extends StatelessWidget {
   final String description;
   final String gameUrl;
@@ -181,36 +179,41 @@ class GameDetails extends StatelessWidget {
   }
 }
 
-// Minimum system requirements widget
+
 class MinimumSystemRequirementsWidget extends StatelessWidget {
-  final MinimumSystemRequirements minimumSystemRequirements;
+  final MinimumSystemRequirements? minimumSystemRequirements;
+  final GameDetailsModel gameDetails;
 
   const MinimumSystemRequirementsWidget(
-      {super.key, required this.minimumSystemRequirements});
+      {super.key, this.minimumSystemRequirements, required this.gameDetails});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Minimum System Requirements:',
-            style: TextStyle(fontSize: 18)),
-        const SizedBox(height: 8),
-        Text('OS: ${minimumSystemRequirements.os}',
-            style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        Text('Processor: ${minimumSystemRequirements.processor}',
-            style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        Text('Memory: ${minimumSystemRequirements.memory}',
-            style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        Text('Graphics: ${minimumSystemRequirements.graphics}',
-            style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        Text('Storage: ${minimumSystemRequirements.storage}',
-            style: const TextStyle(fontSize: 16)),
-      ],
-    );
+    return gameDetails.platform == "Browser"
+        ? const Text("No system requirements available for browser games.")
+        : gameDetails.minimumSystemRequirements == null
+            ? const Text("No system requirements available.")
+            : Column(
+                children: [
+                  const Text('Minimum System Requirements:',
+                      style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 8),
+                  Text('OS: ${minimumSystemRequirements?.os}',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Processor: ${minimumSystemRequirements?.processor}',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Memory: ${minimumSystemRequirements?.memory}',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Graphics: ${minimumSystemRequirements?.graphics}',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Storage: ${minimumSystemRequirements?.storage}',
+                      style: const TextStyle(fontSize: 16)),
+                ],
+              );
   }
 }
 
@@ -222,12 +225,19 @@ class ScreenshotsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Screenshots:', style: TextStyle(fontSize: 18)),
-        const SizedBox(height: 8),
-        ...screenshots.map((screenshot) => Image.network(screenshot.image)),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        height: 200,
+        child: Row(
+          children: [
+            const Text('Screenshots:', style: TextStyle(fontSize: 18)),
+            const SizedBox(width: 8),
+            
+            ...screenshots.map((screenshot) => Image.network(screenshot.image)),
+          ],
+        ),
+      ),
     );
   }
 }

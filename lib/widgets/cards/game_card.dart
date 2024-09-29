@@ -22,7 +22,7 @@ class GameCard extends StatelessWidget {
           context,
           CupertinoPageRoute(
             builder: (context) => GameDetailsScreen(
-              gameModel: gameModel, 
+              gameID: gameModel.id.toString(), 
             ),
           ),
         );
