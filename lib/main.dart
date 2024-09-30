@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_app2/providers/games_provider.dart';
 import 'package:game_app2/screens/home_screen.dart';
-import 'package:game_app2/screens/splash_screen.dart';
+// import 'package:game_app2/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
