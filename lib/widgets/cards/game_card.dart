@@ -1,32 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:game_app/screens/game_details_screen.dart';
-
-import '../../models/game_model.dart';
+import 'package:game_app2/models/GameCardModel.dart';
 import 'package:flutter/material.dart';
 
 class GameCard extends StatelessWidget {
-  const GameCard({super.key, required this.gameModel, required  this.onCardTap});
-
-
+  const GameCard({super.key, required this.gameModel});
   final GameModel gameModel;
-  final void Function(GameModel) onCardTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        onCardTap(gameModel);
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => GameDetailsScreen(
-              gameID: gameModel.id.toString(), 
-            ),
-          ),
-        );
-      },
+      
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: GridTile(
@@ -51,10 +35,11 @@ class GameCard extends StatelessWidget {
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       Icon(
-                        gameModel.platform.contains("Windows") && gameModel.platform.contains("Browser")
+                        gameModel.platform.contains("Windows") &&
+                                gameModel.platform.contains("Browser")
                             ? FontAwesomeIcons.gamepad
-                              : gameModel.platform.contains("Windows")
-                               ? FontAwesomeIcons.computer
+                            : gameModel.platform.contains("Windows")
+                                ? FontAwesomeIcons.computer
                                 : FontAwesomeIcons.globe,
                         size: 16,
                         color: Colors.white,
