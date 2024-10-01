@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:game_app2/helpers/consts.dart';
 import 'package:game_app2/models/GameDetailsModel.dart';
 import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:provider/provider.dart';
