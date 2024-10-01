@@ -1,5 +1,6 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:full_screen_image/full_screen_image.dart';
+import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:game_app2/providers/games_provider.dart';
 import 'package:game_app2/widgets/cards/game_card.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,8 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Consumer<GamesProvider>(
-        builder: (context, gamesConsumer, child) {
+    return Consumer2<GamesProvider, DarkModeProvider>(
+        builder: (context, gamesConsumer, dmc, _) {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -96,25 +97,27 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        ElevatedButton(
-                            onPressed: () {
-                              LaunchExternalUrl(
-                                gamesConsumer.detailedGameModel!.gameUrl,
-                              );
-                            },
-                            child: Text("data")),
+                        Center(
+                          child: ElevatedButton(
+                              onPressed: () {
+                                LaunchExternalUrl(
+                                  gamesConsumer.detailedGameModel!.gameUrl,
+                                );
+                              },
+                              child: const Text("Play Now")),
+                        ),
                         const SizedBox(height: 8),
                         Text(
                           gamesConsumer.detailedGameModel!.title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold, color: dmc.isDark ? Colors.white : Colors.black),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           gamesConsumer
                               .detailedGameModel!.shortDescription,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.normal),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.normal, color: dmc.isDark ? Colors.white : Colors.black),
                         ),
                         SizedBox(
                           height: 200,
@@ -165,9 +168,10 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                             Text(
                               gamesConsumer
                                   .detailedGameModel!.description,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color: dmc.isDark ? Colors.white : Colors.black
                               ),
                               maxLines: isShowMore ? 50 : 3,
                             ),
@@ -198,10 +202,10 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                                 .detailedGameModel!.minimumSystemRequirements
                                   ),
                         const SizedBox(height: 16),
-                        const Text(
-                          "Similar Games",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24),
+                         Text(
+                          "Similar ${gamesConsumer.detailedGameModel?.genre} Games",
+                          style:  TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24, color: dmc.isDark? Colors.white:Colors.black),
                         ),
                         const SizedBox(height: 16),
                         SizedBox(

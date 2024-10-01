@@ -51,11 +51,11 @@ class GameCard extends StatelessWidget {
             ),
           ),
           footer: Container(
-            height: 80,
+            height: 90,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.black87, Colors.transparent],
-                  begin: Alignment.bottomCenter,
+                  colors: [Colors.black, Colors.transparent],
+                  begin: Alignment.center,
                   end: Alignment.topCenter),
             ),
             child: Padding(

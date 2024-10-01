@@ -6,7 +6,7 @@ import 'package:game_app2/models/GameDetailsModel.dart';
 import 'package:game_app2/services/api.dart';
 import 'package:http/http.dart' as http;
 
-class GamesProvider extends ChangeNotifier {
+class GamesProvider with ChangeNotifier {
   GameDetailsModel? detailedGameModel;
   bool isLoading = false;
   List<GameModel> similarGames = [];
@@ -38,11 +38,7 @@ class GamesProvider extends ChangeNotifier {
     final response = await api
         .get("https://www.freetogame.com/api/games?category=$category");
 
-    if (response.statusCode == 200) {
-      var decodedData = json.decode(response.body);
-      detailedGameModel = GameDetailsModel.fromJson(decodedData);
-      getGamesByCategory(detailedGameModel!.genre);
-    }
+  
 
     if (response.statusCode == 200) {
       var decodedData = json.decode(response.body);
