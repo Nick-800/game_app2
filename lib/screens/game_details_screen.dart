@@ -36,7 +36,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            gamesConsumer.isLoading ||
+            gamesConsumer.busy ||
                     gamesConsumer.detailedGameModel == null
                 ? "Loading..."
                 : gamesConsumer.detailedGameModel!.title,
@@ -44,7 +44,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
           ),
         ),
         body: Center(
-          child: gamesConsumer.isLoading &&
+          child: gamesConsumer.busy &&
                   gamesConsumer.detailedGameModel == null
               ? const CircularProgressIndicator()
               : SingleChildScrollView(

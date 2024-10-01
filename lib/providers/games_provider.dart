@@ -3,20 +3,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:game_app2/models/GameCardModel.dart';
 import 'package:game_app2/models/GameDetailsModel.dart';
+import 'package:game_app2/providers/base_provider.dart';
 import 'package:game_app2/services/api.dart';
 import 'package:http/http.dart' as http;
 
-class GamesProvider with ChangeNotifier {
+class GamesProvider extends BaseProvider {
   GameDetailsModel? detailedGameModel;
-  bool isLoading = false;
   List<GameModel> similarGames = [];
   List<GameModel> games = [];
   Api api = Api();
 
 //-----------------------------------------fetchGameById--------------------------------
   fetchGameById(String id) async {
-    isLoading = true;
-    notifyListeners();
+    setBusy(true);
 
     final response =
         await api.get("https://www.freetogame.com/api/game?id=$id");
@@ -26,19 +25,15 @@ class GamesProvider with ChangeNotifier {
       detailedGameModel = GameDetailsModel.fromJson(decodedData);
       getGamesByCategory(detailedGameModel!.genre);
     }
-    isLoading = false;
-    notifyListeners();
+    setBusy(false);
   }
 
 //-------------------------------------getGamesByCategory--------------------------------
   getGamesByCategory(String category) async {
-    isLoading = true;
-    notifyListeners();
+    setBusy(true);
 
     final response = await api
         .get("https://www.freetogame.com/api/games?category=$category");
-
-  
 
     if (response.statusCode == 200) {
       var decodedData = json.decode(response.body);
@@ -47,14 +42,13 @@ class GamesProvider with ChangeNotifier {
               .toList();
     }
 
-    isLoading = false;
-    notifyListeners();
+    setBusy(false);
   }
 
 //--------------------------------fetchGames in the home screen-------------------------------
 
   fetchGames(String platform) async {
-    isLoading = true;
+    setBusy(true);
     games.clear();
     final response = await http.get(
         Uri.parse("https://www.freetogame.com/api/games?platform=$platform"));
@@ -70,8 +64,7 @@ class GamesProvider with ChangeNotifier {
           List<GameModel>.from(decodedData.map((e) => GameModel.fromJson(e)))
               .toList();
 
-      isLoading = false;
-      notifyListeners();
+      setBusy(false);
     }
   }
 }

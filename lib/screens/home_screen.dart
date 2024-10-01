@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Center(
           child: GridView.builder(
-            itemCount: gamesProvider.isLoading ? 6 : gamesProvider.games.length,
+            itemCount: gamesProvider.busy ? 6 : gamesProvider.games.length,
             padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               mainAxisSpacing: 16,
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
-                child: gamesProvider.isLoading
+                child: gamesProvider.busy
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Shimmer.fromColors(
