@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -62,7 +63,9 @@ class _LoginscreenState extends State<Loginscreen> {
                     // Add your login logic here
                     // For example, you can use a FutureBuilder to handle the login API call
                     // or navigate to the next screen
-                    print("Email: $_email, Password: $_password");
+                    if (kDebugMode) {
+                      print("Email: $_email, Password: $_password");
+                    }
                   }
                 },
                 child: const Text("Login"),

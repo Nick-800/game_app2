@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:convert';
 
 class GameModel {

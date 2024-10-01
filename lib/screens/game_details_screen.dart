@@ -238,6 +238,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   }
 }
 
+// ignore: non_constant_identifier_names
 LaunchExternalUrl(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url));
