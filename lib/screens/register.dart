@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Form(
                   key: formKey,
                   child: SizedBox(
-                    height: 440,
+                    height: 448,
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Column(
@@ -125,6 +125,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                             },
                           ),
+                          const SizedBox(height: 32,),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                  // ignore: use_build_context_synchronously
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        const ScreenRouter(),
+                                  ),
+                                  (route) => false,
+                                );
+                              },
+                              child: Text(
+                                "Already have an account?",
+                                style: TextStyle(color: blueColor),
+                              ))
                         ],
                       ),
                     ),
