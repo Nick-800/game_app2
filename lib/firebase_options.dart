@@ -79,4 +79,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'lati-games-69.appspot.com',
     measurementId: 'G-RWGVCQZ4QH',
   );
+
 }

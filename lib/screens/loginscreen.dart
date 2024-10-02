@@ -1,79 +1,159 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game_app2/helpers/consts.dart';
+import 'package:game_app2/main.dart';
+import 'package:game_app2/providers/auth_provider.dart';
+import 'package:game_app2/providers/dark_mode_provider.dart';
+import 'package:game_app2/screens/register.dart';
+import 'package:game_app2/widgets/clickables/buttons/main_button.dart';
+import 'package:provider/provider.dart';
 
-class Loginscreen extends StatefulWidget {
-  const Loginscreen({super.key});
+class LoginScreen extends StatefulWidget {
+
+
+  const LoginScreen({super.key});
 
   @override
-  State<Loginscreen> createState() => _LoginscreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginscreenState extends State<Loginscreen> {
-  final _formKey = GlobalKey<FormState>();
-  String _email = '', _password = '';
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Login",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
+    return Consumer<DarkModeProvider>(builder: (context, dmc, _) {
+      return Scaffold(
+        body: Center(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Card(
+                shadowColor: greyColor,
+                color: Colors.white54,
+                child: Form(
+                  key: formKey,
+                  child: SizedBox(
+                    height: 480,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Login Screen",
+                            style: largeTitle.copyWith(
+                                color:
+                                    dmc.isDark ? Colors.white : Colors.black),
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Email Cannot Be Empty.";
+                              }
+
+                              if (!value.contains("@")) {
+                                return "Please Enter Valid Email.";
+                              }
+
+                              return null;
+                            },
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                color: blackColor,
+                              )),
+                              hintText: "Email",
+                              labelText: "Email",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: blueColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          TextFormField(
+                            obscureText: true,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Password Cannot Be Empty.";
+                              }
+
+                              if (value.length < 8) {
+                                return "Password Must Be At Least 8 Characters.";
+                              }
+
+                              return null;
+                            },
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              labelText: "Password",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          MainButton(
+                            label: "Login",
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                Provider.of<AuthenticationProvider>(context,
+                                        listen: false)
+                                    .login(emailController.text,
+                                        passwordController.text)
+                                    .then((loggedIn) {
+                                  if (loggedIn) {
+                                    Navigator.pushAndRemoveUntil(
+                                      // ignore: use_build_context_synchronously
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            const ScreenRouter(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }
+                                });
+                              } else {
+                                printDebug("FORM NOT VALID");
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 64,),
+                          TextButton(onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                  // ignore: use_build_context_synchronously
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => const RegisterScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+
+
+                          }, child: Text("Don't have an account?", style: TextStyle(color: blueColor),))
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter an email";
-                  }
-                  return null;
-                },
-                onSaved: (value) => _email = value!,
               ),
-              const SizedBox(height: 10),
-               TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a password";
-                  }
-                  return null;
-                },
-                onSaved: (value) => _password = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Add your login logic here
-                    // For example, you can use a FutureBuilder to handle the login API call
-                    // or navigate to the next screen
-                    if (kDebugMode) {
-                      print("Email: $_email, Password: $_password");
-                    }
-                  }
-                },
-                child: const Text("Login"),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

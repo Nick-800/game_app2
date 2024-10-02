@@ -1,8 +1,29 @@
-// String basUrl
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:game_app2/providers/dark_mode_provider.dart';
 
-DarkModeProvider dmc = DarkModeProvider();
+//--------------API-------------------------
 
-Color bnw = dmc.isDark ? Colors.red : Colors.blue;
+String baseUrl = '';
+
+//------------------COLORS--------------------------
+
+Color blueColor = Colors.blue;
+Color redColor = Colors.red;
+Color greenColor = Colors.green;
+Color blueGreyColor = Colors.blueGrey;
+Color greyColor = Colors.grey;
+Color whiteColor = Colors.white;
+Color blackColor = Colors.black;
+
+//-------------------------TEXT STYLES ------------------------
+
+TextStyle largeTitle =
+    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+//-------------Debug Functions------------------------
+
+void printDebug(String message) {
+  if (kDebugMode) {
+    print(message);
+  }
+}

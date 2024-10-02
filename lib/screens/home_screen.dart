@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:game_app2/main.dart';
+import 'package:game_app2/providers/auth_provider.dart';
 import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:game_app2/providers/games_provider.dart';
 import 'package:game_app2/screens/game_details_screen.dart';
 import 'package:game_app2/widgets/cards/game_card.dart';
+import 'package:game_app2/widgets/clickables/buttons/main_button.dart';
 import 'package:game_app2/widgets/clickables/drawer_tiles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -38,17 +42,29 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   DrawerTile(
-                      text: dmc.isDark
-                          ? "Light Mode"
-                          : "Dark Mode",
+                      text: dmc.isDark ? "Light Mode" : "Dark Mode",
                       onTab: () {
                         Provider.of<DarkModeProvider>(context, listen: false)
                             .switchMode();
                       },
-                      icon: dmc.isDark
-                          ? Icons.light_mode
-                          : Icons.dark_mode),
-                  
+                      icon: dmc.isDark ? Icons.light_mode : Icons.dark_mode),
+                  MainButton(label: "Logout", onPressed: () {
+                    Provider.of<AuthenticationProvider>(context,
+                                listen: false)
+                            .logout()
+                            .then((loggedIn) {
+                          if (loggedIn) {
+                            Navigator.pushAndRemoveUntil(
+                              // ignore: use_build_context_synchronously
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => const ScreenRouter(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        });
+                  })
                 ],
               ),
             ),
@@ -99,8 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
-          unselectedItemColor: dmc.isDark? Colors.white54 : Colors.black45,
-          selectedLabelStyle: GoogleFonts.roboto(fontWeight: FontWeight.bold, color: Colors.blue),
+          unselectedItemColor: dmc.isDark ? Colors.white54 : Colors.black45,
+          selectedLabelStyle: GoogleFonts.roboto(
+              fontWeight: FontWeight.bold, color: Colors.blue),
           unselectedLabelStyle:
               GoogleFonts.roboto(fontWeight: FontWeight.normal, fontSize: 12),
           onTap: (currentIndex) {
@@ -117,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: nowIndex,
           items: const [
             BottomNavigationBarItem(
-                label: "ALL", icon: Icon(FontAwesomeIcons.gamepad,), ),
+              label: "ALL",
+              icon: Icon(
+                FontAwesomeIcons.gamepad,
+              ),
+            ),
             BottomNavigationBarItem(
                 label: "PC", icon: Icon(FontAwesomeIcons.computer)),
             BottomNavigationBarItem(

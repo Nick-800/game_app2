@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:game_app2/helpers/consts.dart';
 import 'package:game_app2/models/GameCardModel.dart';
 import 'package:game_app2/models/GameDetailsModel.dart';
 import 'package:game_app2/providers/base_provider.dart';
@@ -53,10 +53,10 @@ class GamesProvider extends BaseProvider {
     final response = await http.get(
         Uri.parse("https://www.freetogame.com/api/games?platform=$platform"));
 
-    if (kDebugMode) {
-      print("STATUS CODE : ${response.statusCode}");
-      print("BODY : ${response.body}");
-    }
+    
+      printDebug("STATUS CODE : ${response.statusCode}");
+      printDebug("BODY : ${response.body}");
+    
 
     if (response.statusCode == 200) {
       var decodedData = json.decode(response.body);
