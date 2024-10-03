@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:game_app2/firebase_options.dart';
+import 'package:game_app2/helpers/consts.dart';
+import 'package:game_app2/helpers/notification_helper.dart';
 import 'package:game_app2/providers/auth_provider.dart';
 import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:game_app2/providers/games_provider.dart';
@@ -17,6 +20,20 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    printDebug("BACKGROUND MESSAGE");
+    printDebug("Handling a background message ${message.messageId}");
+    printDebug("Notification data:  ${message.data}");
+    printDebug("message -------");
+  }
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    printDebug("------FOREGROUND MESSAGE------");
+    showFlutterNotification(message);
+  });
+
+  await setupFlutterNotifications();
   runApp(const MyApp());
 }
 
@@ -30,8 +47,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<GamesProvider>(create: (_) => GamesProvider()),
         ChangeNotifierProvider<DarkModeProvider>(
             create: (_) => DarkModeProvider()),
-        ChangeNotifierProvider<AuthenticationProvider>(create: (_)=> AuthenticationProvider())
-
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (_) => AuthenticationProvider())
       ],
       child:
           Consumer<DarkModeProvider>(builder: (context, darkModeConsumer, _) {

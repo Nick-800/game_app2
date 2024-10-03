@@ -44,8 +44,11 @@ dependencies:
   auto_size_text:
   url_launcher:
   full_screen_image:
-  firebase_core: ^3.6.0
+  firebase_core:
   firebase_auth:
+  flutter_local_notifications: 
+  firebase_messaging: 
+  permission_handler: 
 
 
 dev_dependencies:

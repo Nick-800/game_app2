@@ -1,12 +1,12 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:full_screen_image/full_screen_image.dart';
+import 'package:game_app2/helpers/functions_helper.dart';
 import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:game_app2/providers/games_provider.dart';
 import 'package:game_app2/widgets/cards/game_card.dart';
 import 'package:flutter/material.dart';
 import 'package:game_app2/widgets/cards/minimum_system_requirments_card.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GameDetailsScreen extends StatefulWidget {
   const GameDetailsScreen({super.key, required this.gameId});
@@ -239,10 +239,4 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
 }
 
 // ignore: non_constant_identifier_names
-LaunchExternalUrl(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
-  }
-}
+

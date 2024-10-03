@@ -44,12 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   DrawerTile(
                       text: dmc.isDark ? "Light Mode" : "Dark Mode",
                       onTab: () {
+            
                         Provider.of<DarkModeProvider>(context, listen: false)
                             .switchMode();
                       },
                       icon: dmc.isDark ? Icons.light_mode : Icons.dark_mode),
-                  MainButton(label: "Logout", onPressed: () {
-                    Provider.of<AuthenticationProvider>(context,
+                  MainButton(
+                      label: "Logout",
+                      onPressed: () {
+                        Provider.of<AuthenticationProvider>(context,
                                 listen: false)
                             .logout()
                             .then((loggedIn) {
@@ -64,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                         });
-                  })
+                      })
                 ],
               ),
             ),
