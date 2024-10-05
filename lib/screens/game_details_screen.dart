@@ -6,6 +6,7 @@ import 'package:game_app2/providers/games_provider.dart';
 import 'package:game_app2/widgets/cards/game_card.dart';
 import 'package:flutter/material.dart';
 import 'package:game_app2/widgets/cards/minimum_system_requirments_card.dart';
+import 'package:game_app2/widgets/clickables/dialogs/add_to_favorite_dialog.dart';
 import 'package:provider/provider.dart';
 
 class GameDetailsScreen extends StatefulWidget {
@@ -222,7 +223,8 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                                 padding: const EdgeInsets.only(right: 16),
                                 child: GameCard(
                                     gameModel: gamesConsumer
-                                        .similarGames[index]),
+                                        .similarGames[index],
+                                        onLongPress: (){},),
                               ),
                             ),
                           ),

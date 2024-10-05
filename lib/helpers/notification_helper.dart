@@ -119,6 +119,7 @@ void showFlutterNotification(RemoteMessage message) {
       );
     }
   }
+  // ignore: unused_element
   showTestNotification() {
     flutterLocalNotificationsPlugin.show(
       157,

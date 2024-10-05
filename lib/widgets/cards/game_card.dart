@@ -4,13 +4,17 @@ import 'package:game_app2/models/GameCardModel.dart';
 import 'package:flutter/material.dart';
 
 class GameCard extends StatelessWidget {
-  const GameCard({super.key, required this.gameModel});
+  const GameCard(
+      {super.key, required this.gameModel, required this.onLongPress});
   final GameModel gameModel;
+  final Function onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      
+      onLongPress: () {
+        onLongPress();
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: GridTile(

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:game_app2/providers/base_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthenticationProvider extends BaseProvider {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -19,14 +20,26 @@ class AuthenticationProvider extends BaseProvider {
     }
   }
 
-  Future<bool> createAccount(String email, String password) async {
+  Future<bool> createAccount(String email, String password, String userName) async {
     UserCredential userCred = await firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
     if (userCred.user != null) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .add({"name": userName, "email": email, "user_uid": userCred.user!.uid});
+
       return true;
     } else {
       return false;
     }
+  }
+
+  Future<bool> resetpassword(String email) async {
+    setBusy(true);
+    await firebaseAuth.sendPasswordResetEmail(email: email);
+
+    setBusy(false);
+    return true;
   }
 
   Future<bool> logout() async {

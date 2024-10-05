@@ -5,9 +5,11 @@ import 'package:game_app2/main.dart';
 import 'package:game_app2/providers/auth_provider.dart';
 import 'package:game_app2/providers/dark_mode_provider.dart';
 import 'package:game_app2/providers/games_provider.dart';
+import 'package:game_app2/screens/favorite_games_screen.dart';
 import 'package:game_app2/screens/game_details_screen.dart';
 import 'package:game_app2/widgets/cards/game_card.dart';
 import 'package:game_app2/widgets/clickables/buttons/main_button.dart';
+import 'package:game_app2/widgets/clickables/dialogs/add_to_favorite_dialog.dart';
 import 'package:game_app2/widgets/clickables/drawer_tiles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +36,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer2<GamesProvider, DarkModeProvider>(
         builder: (context, gamesProvider, dmc, _) {
       return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("GAMEBOi"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const FavoriteGamesScreen()));
+                },
+                icon: const Icon(Icons.favorite))
+          
+          ],
+        ),
         drawer: Drawer(
           child: SafeArea(
             child: Padding(
@@ -44,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   DrawerTile(
                       text: dmc.isDark ? "Light Mode" : "Dark Mode",
                       onTab: () {
-            
                         Provider.of<DarkModeProvider>(context, listen: false)
                             .switchMode();
                       },
@@ -110,6 +125,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: GameCard(
                           gameModel: gamesProvider.games[index],
+                          onLongPress: () {
+                             showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return AddToFavoriteDialog(
+                                    gameModel: gamesProvider.games[index],
+                                  );
+                                });
+                          },
                         ),
                       ),
               );
