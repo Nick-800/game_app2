@@ -192,7 +192,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         if (gamesConsumer
                                 .detailedGameModel!.minimumSystemRequirements !=
                             null)
